@@ -6,6 +6,7 @@ import com.educacionit.modelos.PersonaVO;
 import java.sql.*;
 
 import javax.print.attribute.standard.Sides;
+import javax.swing.JOptionPane;
 
 //CApa de acceso a datos 
 //CRUD ' create read update delete
@@ -45,8 +46,7 @@ public class PersonaDAO {
 		PersonaVO persona = null;
 
 		try {
-			PreparedStatement consulta = conex.getConnection()
-					.prepareStatement("SELECT * FROM persona WHERE id = ? ");
+			PreparedStatement consulta = conex.getConnection().prepareStatement("SELECT * FROM persona WHERE id = ? ");
 			consulta.setInt(1, codigo);
 			// ejecutamos la query y guarmos el set de resultado obtenidos
 			// en un objeto de tipo Resulset
@@ -100,6 +100,33 @@ public class PersonaDAO {
 		} finally {
 			conex.desconectar();
 		}
+
+	}
+
+	// procedimiento que me permite borrar un registro existente mediante su id
+	public void eliminarPersona(String codigo) {
+		Conexion conex = new Conexion();
+		Statement estatuto = null;
+		try {
+			estatuto = conex.getConnection().createStatement();
+			estatuto.executeUpdate("DELETE FROM persona WHERE id='" + codigo + "'");
+			JOptionPane.showMessageDialog(null, " Se ha Eliminado Correctamente ", "Informacion",
+					JOptionPane.INFORMATION_MESSAGE);
+			conex.desconectar();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "No se ah logrado eliminar el registro cuyo id es :" + codigo);
+		} finally {
+			try {
+				estatuto.close();
+			} catch (SQLException e) {
+				System.out.println("No se logro cerrar el Statement");
+				e.printStackTrace();
+			}
+		}
+
+		// ("DELETE FROM persona WHERE id = '" +codigo + "'")
 
 	}
 
